@@ -7,7 +7,7 @@ from newsapi import NewsApiClient
 import time
 
 
-news = NewsApiClient(api_key='5753feb0897a4ff5a322ccd4289acede')
+newsapi = NewsApiClient(api_key='5753feb0897a4ff5a322ccd4289acede')
 coin_client = CoinGeckoAPI()
 API_KEY = os.environ.get('API_KEY')
 bot = telebot.TeleBot("5587433203:AAEvScGpJH8VuCzwB0jaD6peNTru-P67X6k")
@@ -41,7 +41,44 @@ def info(message):
         print()
         print('------------------------------------------------------')
         print()
-
+@bot.message_handler(commands=['news'])
+def news(message):
+    if len(message.text.strip().split()) == 3:
+        coin = message.text.strip(' ').split()[1]
+        language = message.text.strip(' ').split()[2]
+        print(f"The user requested news about {coin}:")
+        print()
+        if coin in coins:
+            top_headlines = newsapi.get_everything(q=coin, language=language, sort_by='popularity', page_size=10)
+            if top_headlines['totalResults'] > 0  and top_headlines['articles']:
+                for i in range(0,3):
+                    bot.reply_to(message, text=f"[{i+1}]\n\nTitle: {top_headlines['articles'][i]['title']}\n\nDescription: {top_headlines['articles'][i]['description']}\n\nURL: {top_headlines['articles'][i]['url']}\n\nPublished: {top_headlines['articles'][i]['publishedAt'][:10]}\n\n")
+                    print()
+                    print(f"Title: {top_headlines['articles'][i]['title']}")
+                    print(f"Description: {top_headlines['articles'][i]['description']}")
+                    print(f"URL: {top_headlines['articles'][i]['url']}")
+                    print(f"Published in: {top_headlines['articles'][i]['publishedAt'][:10]}")
+                    print()
+                    print('------------------------------------------------------')
+                    print()
+            else:
+                bot.reply_to(message, text=f'Error, {coin} has no articles')
+                print(f'Error, {coin} has no articles')
+                print()
+                print('------------------------------------------------------')
+                print()
+        else:
+            bot.reply_to(message, text=f'Error, {coin} was not found')
+            print(f'Error, {coin} was not found')
+            print()
+            print('------------------------------------------------------')
+            print()
+    else:
+        bot.reply_to(message, text='Error, please use /news <coin> <language>')
+        print('Error, please use /news <coin>')
+        print(f"Number of args: {len(message.text.strip().split())}")
+        print()
+        print
 
 
 if __name__ == '__main__':
