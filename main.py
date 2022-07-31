@@ -29,8 +29,8 @@ def info(message):
                 print('------------------------------------------------------')
                 print()
         else:
-            bot.reply_to(message, text=f'Error, {coin} was not found')
-            print(f'Error, {coin} was not found')
+            bot.reply_to(message, text=f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
+            print(f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
             print()
             print('------------------------------------------------------')
             print()
@@ -68,17 +68,26 @@ def news(message):
                 print('------------------------------------------------------')
                 print()
         else:
-            bot.reply_to(message, text=f'Error, {coin} was not found')
-            print(f'Error, {coin} was not found')
+            bot.reply_to(message, text=f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
+            print(f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
             print()
             print('------------------------------------------------------')
             print()
     else:
-        bot.reply_to(message, text='Error, please use /news <coin> <language>')
+        bot.reply_to(message, text='Error, please use /news <coin> <language>, for languages available use /languages')
         print('Error, please use /news <coin>')
         print(f"Number of args: {len(message.text.strip().split())}")
         print()
         print
+
+@bot.message_handler(commands=['language'])
+def language(message):
+    bot.reply_to(message, text='Possible language options: ar-de-en-es-fr-he-it-nl-no-pt-ru-sv-ud-zh.')
+    print('Possible language options: ar-de-en-es-fr-he-it-nl-no-pt-ru-sv-ud-zh.')
+    print()
+    print('------------------------------------------------------')
+    print()
+    
 
 
 if __name__ == '__main__':
