@@ -5,13 +5,50 @@ from pycoingecko import CoinGeckoAPI
 from coins import coins
 from newsapi import NewsApiClient
 import time
-
+from blockchain import *
 
 newsapi = NewsApiClient(api_key='5753feb0897a4ff5a322ccd4289acede')
 coin_client = CoinGeckoAPI()
 API_KEY = os.environ.get('API_KEY')
 bot = telebot.TeleBot("5587433203:AAEvScGpJH8VuCzwB0jaD6peNTru-P67X6k")
 languages = ["ar","de","en","es","fr","he","it","nl","no","pt","ru","sv","ud","zh"]
+blockchaincoins = ['btc', 'btc-testnet', 'ltc', 'doge', 'dash', 'bcy']
+
+
+@bot.message_handler(commands=['blockchainaddr'])
+def blockchainwl(message):
+    if len(message.text.strip().split()) == 3:
+        address = message.text.strip(' ').split()[1]
+        print(address)
+        coin = message.text.strip(' ').split()[2]
+        print(coin)
+        if coin in blockchaincoins:
+            address = bk_details(address, coin)['address']
+            total_received = satoshi_to_btc(bk_details(address, coin)['total_received'])
+            total_sent = satoshi_to_btc(bk_details(address, coin)['total_sent'])
+            balance = satoshi_to_btc(bk_details(address, coin)['balance'])
+            unconfirmed_balance = satoshi_to_btc(bk_details(address, coin)['unconfirmed_balance'])
+            final_balance = satoshi_to_btc(bk_details(address, coin)['final_balance'])
+            tx_count = bk_details(address, coin)['n_tx']
+            confirmed_time = bk_details(address, coin)['txrefs'][0]['confirmed']
+            url = bk_details(address, coin)['tx_url']
+            bot.send_message(message.chat.id, "Address: " + address + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Total Sent: " + str(total_sent) + "\n" + "\n" + "Confirmed Balance: " + str(balance) + "\n" + "\n" + "Unconfirmed Balance: " + str(unconfirmed_balance) + "\n" + "\n" + "Final Balance: " + str(final_balance) + "\n" + "\n" + "Number of Transactions: " + str(tx_count) + "\n" + "\n" + "Last Tx Time: " + str(confirmed_time)[:19] + " (GMT+1)" + "\n" + "\n" + f"Last {coin} Transactions: " + url + "\n" + "\n" + "Blockchain Address: " + "https://blockchain.info/address/" + address)
+            print("Address: " + address + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Total Sent: " + str(total_sent) + "\n" + "\n" + "Confirmed Balance: " + str(balance) + "\n" + "\n" + "Unconfirmed Balance: " + str(unconfirmed_balance) + "\n" + "\n" + "Final Balance: " + str(final_balance) + "\n" + "\n" + "Number of Transactions: " + str(tx_count) + "\n" + "\n" + "Last Tx Time: " + str(confirmed_time)[:19] + " (GMT+1)"  + "\n" + "\n" + f"Last {coin} Transactions: " + url + "\n" + "\n" + "Blockchain Address: " + "https://blockchain.info/address/" + address)
+            print()
+            print('------------------------------------------------------')
+            print()
+        else:
+            bot.reply_to(message, "Coin not supported, please use one of the following: " + str(blockchaincoins))
+            print()
+            print('------------------------------------------------------')
+            print()
+    else:
+        bot.reply_to(message, "Usage: /blockchainwl <address> <coin>, avalable coins: btc, btc-testnet, ltc, doge, dash, bcy")
+        print()
+        print('------------------------------------------------------')
+        print()
+
+
 
 @bot.message_handler(commands=['info'])
 def info(message):
