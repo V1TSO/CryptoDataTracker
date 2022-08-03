@@ -19,9 +19,7 @@ blockchaincoins = ['btc', 'btc-testnet', 'ltc', 'doge', 'dash', 'bcy']
 def blockchainwl(message):
     if len(message.text.strip().split()) == 3:
         address = message.text.strip(' ').split()[1]
-        print(address)
         coin = message.text.strip(' ').split()[2]
-        print(coin)
         if coin in blockchaincoins:
             address = bk_details(address, coin)['address']
             total_received = satoshi_to_btc(bk_details(address, coin)['total_received'])
@@ -35,18 +33,63 @@ def blockchainwl(message):
             bot.send_message(message.chat.id, "Address: " + address + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Total Sent: " + str(total_sent) + "\n" + "\n" + "Confirmed Balance: " + str(balance) + "\n" + "\n" + "Unconfirmed Balance: " + str(unconfirmed_balance) + "\n" + "\n" + "Final Balance: " + str(final_balance) + "\n" + "\n" + "Number of Transactions: " + str(tx_count) + "\n" + "\n" + "Last Tx Time: " + str(confirmed_time)[:19] + " (GMT+1)" + "\n" + "\n" + f"Last {coin} Transactions: " + url + "\n" + "\n" + "Blockchain Address: " + "https://blockchain.info/address/" + address)
             print("Address: " + address + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Total Sent: " + str(total_sent) + "\n" + "\n" + "Confirmed Balance: " + str(balance) + "\n" + "\n" + "Unconfirmed Balance: " + str(unconfirmed_balance) + "\n" + "\n" + "Final Balance: " + str(final_balance) + "\n" + "\n" + "Number of Transactions: " + str(tx_count) + "\n" + "\n" + "Last Tx Time: " + str(confirmed_time)[:19] + " (GMT+1)"  + "\n" + "\n" + f"Last {coin} Transactions: " + url + "\n" + "\n" + "Blockchain Address: " + "https://blockchain.info/address/" + address)
             print()
-            print('------------------------------------------------------')
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
             print()
         else:
-            bot.reply_to(message, "Coin not supported, please use one of the following: " + str(blockchaincoins))
+            bot.reply_to(message, "Coin not supported, please use one of the following: /bchcoins")
+            print("Coin not supported, please use one of the following: /bchcoins")
             print()
-            print('------------------------------------------------------')
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
             print()
     else:
-        bot.reply_to(message, "Usage: /blockchainwl <address> <coin>, avalable coins: btc, btc-testnet, ltc, doge, dash, bcy")
+        bot.reply_to(message, "Usage: /blockchainaddr <address> <coin>, avalable coins: /bchcoins")
+        print("Usage: /blockchainaddr <address> <coin>, avalable coins: /bchcoins")
         print()
-        print('------------------------------------------------------')
+        print('------------------------------------------------------ | Press Ctrl+C to stop ')
         print()
+
+@bot.message_handler(commands=['blockchaintx'])
+def blockchaintx(message):
+    if len(message.text.strip().split()) == 3:
+        tx_hash = message.text.strip(' ').split()[1]
+        coin = message.text.strip(' ').split()[2]
+        if coin in blockchaincoins:
+            block_hash = bk_transaction_details(tx_hash, coin)['block_hash']
+            adresses = bk_transaction_details(tx_hash, coin)['addresses']
+            total = satoshi_to_btc(bk_transaction_details(tx_hash, coin)['total'])
+            fees = satoshi_to_btc(bk_transaction_details(tx_hash, coin)['fees'])
+            total_received = total - fees
+            preference = bk_transaction_details(tx_hash, coin)['preference']
+            confirmations = bk_transaction_details(tx_hash, coin)['confirmations']
+            confidance = bk_transaction_details(tx_hash, coin)['confidence']
+            bot.send_message(message.chat.id, "Transaction Hash: " + tx_hash + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Block Hash: " + block_hash + "\n" + "\n" + "Addresses: " + str(adresses) + "\n" + "\n" + "Total: " + str(total) + "\n" + "\n" + "Fees: " + str(fees) + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Preference: " + str(preference) + "\n" + "\n" + "Confirmations: " + str(confirmations) + "\n" + "\n" + "Confidence: " + str(confidance) + "\n" + "\n")
+            print("Transaction Hash: " + tx_hash + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Block Hash: " + block_hash + "\n" + "\n" + "Addresses: " + str(adresses) + "\n" + "\n" + "Total: " + str(total) + "\n" + "\n" + "Fees: " + str(fees) + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Preference: " + str(preference) + "\n" + "\n" + "Confirmations: " + str(confirmations) + "\n" + "\n" + "Confidence: " + str(confidance) + "\n" + "\n")
+            print()
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
+            print()
+        else:
+            bot.reply_to(message, "Coin not supported, please use one of the following: /bchcoins")
+            print("Coin not supported, please use one of the following: /bchcoins")
+            print()
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
+            print()
+    else:
+        bot.reply_to(message, "Usage: /blockchaintx <tx_hash> <coin>, avalable coins: /bchcoins")
+        print("Usage: /blockchaintx <tx_hash> <coin>, avalable coins: /bchcoins")
+        print()
+        print('------------------------------------------------------ | Press Ctrl+C to stop ')
+        print()
+
+     
+@bot.message_handler(commands=['bchcoins'])
+def bchcoins(message):
+    bot.reply_to(message, "Available coins: " + str(blockchaincoins))
+    print("Available coins: " + str(blockchaincoins))
+    print()
+    print('------------------------------------------------------ | Press Ctrl+C to stop ')
+    print()
+
+
 
 
 
@@ -93,14 +136,14 @@ def info(message):
             bot.reply_to(message, text=f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
             print(f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
             print()
-            print('------------------------------------------------------')
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
             print()
     else:
         bot.reply_to(message, text='Error, please use /info <coin>')
         print('Error, please use /info <coin>')
         print(f"Number of args: {len(message.text.strip().split())}")
         print()
-        print('------------------------------------------------------')
+        print('------------------------------------------------------ | Press Ctrl+C to stop ')
         print()
 @bot.message_handler(commands=['news'])
 def news(message):
@@ -120,26 +163,26 @@ def news(message):
                     print(f"URL: {top_headlines['articles'][i]['url']}")
                     print(f"Published in: {top_headlines['articles'][i]['publishedAt'][:10]}")
                     print()
-                    print('------------------------------------------------------')
+                    print('------------------------------------------------------ | Press Ctrl+C to stop ')
                     print()
                     if i == 2:
                         bot.reply_to(message, text="This function is still in alpha development, currently it only works well with top Market Cap coins.")
                         print("This function is still in alpha development, currently it only works well with top Market Cap coins.")
                         print()
-                        print('------------------------------------------------------')
+                        print('------------------------------------------------------ | Press Ctrl+C to stop ')
                         print()
 
             else:
                 bot.reply_to(message, text=f'Error, {coin} has no articles')
                 print(f'Error, {coin} has no articles')
                 print()
-                print('------------------------------------------------------')
+                print('------------------------------------------------------ | Press Ctrl+C to stop ')
                 print()
         else:
             bot.reply_to(message, text=f'Error, {coin} was not found or language is not supported, if the coin has two words use "-" instead of space and if the language is not supported use /language')
             print(f'Error, {coin} was not found, if the coin has two words use "-" instead of space and if the language is not supported use /language')
             print()
-            print('------------------------------------------------------')
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
             print()
     else:
         bot.reply_to(message, text='Error, please use /news <coin> <language>, for languages available use /languages')
@@ -153,22 +196,22 @@ def language(message):
     bot.reply_to(message, text='Possible language options: ar-de-en-es-fr-he-it-nl-no-pt-ru-sv-ud-zh.')
     print('Possible language options: ar-de-en-es-fr-he-it-nl-no-pt-ru-sv-ud-zh.')
     print()
-    print('------------------------------------------------------')
+    print('------------------------------------------------------ | Press Ctrl+C to stop ')
     print()
 
 
 
 if __name__ == '__main__':
     print('Initializing bot...')
-    time.sleep(2)
+    time.sleep(0.5)
     print('Bot is running...')
-    time.sleep(2)
+    time.sleep(0.5)
     print('waiting for commands...')
-    time.sleep(2)
+    time.sleep(0.5)
     print('available commands: /info <coin>')
     print('Press Ctrl+C to stop')
     print('Logs:')
     print()
-    print('------------------------------------------------------')
+    print('------------------------------------------------------ | Press Ctrl+C to stop ')
     print()
     bot.polling()
