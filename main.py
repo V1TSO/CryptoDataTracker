@@ -6,6 +6,7 @@ from coins import coins
 from newsapi import NewsApiClient
 import time
 from blockchain import *
+from gnf import *
 
 newsapi = NewsApiClient(api_key='5753feb0897a4ff5a322ccd4289acede')
 coin_client = CoinGeckoAPI()
@@ -13,6 +14,52 @@ API_KEY = os.environ.get('API_KEY')
 bot = telebot.TeleBot("5587433203:AAEvScGpJH8VuCzwB0jaD6peNTru-P67X6k")
 languages = ["ar","de","en","es","fr","he","it","nl","no","pt","ru","sv","ud","zh"]
 blockchaincoins = ['btc', 'btc-testnet', 'ltc', 'doge', 'dash', 'bcy']
+max_days = ["1","2","3","4","5","6","7","8","9","10"]
+
+@bot.message_handler(commands=['commands'])
+def commands(message):
+    bot.send_message(message.chat.id, "Available commands:\n\n/info - Displays information about a coin, usage: /info <coin-here>\n\n/news - Displays news about a coin, usage: /news <coin-here> <language>\n\n/language - Displays all available languages, usage: /language\n\n/blockchainaddr - Displays all informaition about a bitcoin address/wallet, usage: /blochchainaddr <address> <coin-here>\n\n/blockchaintx - Displays all informaition about a bitcoin transaction, usage: /blochchaintx <transaction> <coin-here>\n\n/bchcoins - Displays all information about the networks available for the /blockchain... command, usage: /bchcoins\n\n/btcindex - Displays the Bitcoin Greed&Fear Index, usage: /btcindex <daysback (1 = Today)>")
+    print("Commands sent")  
+    print()
+    print('------------------------------------------------------ | Press Ctrl+C to stop ')
+    print()
+
+
+@bot.message_handler(commands=['btcindex'])
+def btcindex(message):
+    if len(message.text.strip().split()) == 2:
+        if message.text.split()[1] in max_days:
+            daysback = int(message.text.split()[1])
+            gnf = greed_and_fear(daysback)
+            for i in range(daysback):
+                if i == 0:
+                    bot.send_message(message.chat.id, f"[Day {i} (Today)]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}\n")
+                    print(f"[Day {i} (Today)]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}\n")
+                    print()
+                    print('------------------------------------------------------ | Press Ctrl+C to stop ')
+                    print()
+
+                else:
+                    bot.send_message(message.chat.id, f"[Day -{i}]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}\n")
+                    print(f"[Day -{i}]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}")
+                    print()
+                    print('------------------------------------------------------ | Press Ctrl+C to stop ')
+                    print()
+        else:
+            bot.send_message(message.chat.id, "Please enter a number between 1 and 10")
+            print("Please enter a number between 1 and 10")
+            print()
+            print('------------------------------------------------------ | Press Ctrl+C to stop ')
+            print()
+
+    else:
+        bot.send_message(message.chat.id, "Please enter a number of days to look back.")
+        print("Please enter a number of days to look back.")
+        print() 
+        print('------------------------------------------------------ | Press Ctrl+C to stop ')
+        print()
+
+
 
 
 @bot.message_handler(commands=['blockchainaddr'])
