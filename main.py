@@ -7,6 +7,7 @@ from newsapi import NewsApiClient
 import time
 from blockchain import *
 from gnf import *
+from spacing import *
 
 newsapi = NewsApiClient(api_key='5753feb0897a4ff5a322ccd4289acede')
 coin_client = CoinGeckoAPI()
@@ -20,9 +21,7 @@ max_days = ["1","2","3","4","5","6","7","8","9","10"]
 def commands(message):
     bot.send_message(message.chat.id, "Available commands:\n\n/info - Displays information about a coin, usage: /info <coin-here>\n\n/news - Displays news about a coin, usage: /news <coin-here> <language>\n\n/language - Displays all available languages, usage: /language\n\n/blockchainaddr - Displays all informaition about a bitcoin address/wallet, usage: /blochchainaddr <address> <coin-here>\n\n/blockchaintx - Displays all informaition about a bitcoin transaction, usage: /blochchaintx <transaction> <coin-here>\n\n/bchcoins - Displays all information about the networks available for the /blockchain... command, usage: /bchcoins\n\n/btcindex - Displays the Bitcoin Greed&Fear Index, usage: /btcindex <daysback (1 = Today)>")
     print("Commands sent")  
-    print()
-    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-    print()
+    spacing()
 
 
 @bot.message_handler(commands=['btcindex'])
@@ -35,29 +34,21 @@ def btcindex(message):
                 if i == 0:
                     bot.send_message(message.chat.id, f"[Day {i} (Today)]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}\n")
                     print(f"[Day {i} (Today)]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}\n")
-                    print()
-                    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-                    print()
+                    spacing()
 
                 else:
                     bot.send_message(message.chat.id, f"[Day -{i}]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}\n")
                     print(f"[Day -{i}]\n\nValue: {gnf[0][i]}\n\nValue Classification: {gnf[1][i]}\n\nTimestamp: {gnf[2][i]}")
-                    print()
-                    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-                    print()
+                    spacing()
         else:
             bot.send_message(message.chat.id, "Please enter a number between 1 and 10")
             print("Please enter a number between 1 and 10")
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
 
     else:
         bot.send_message(message.chat.id, "Please enter a number of days to look back.")
         print("Please enter a number of days to look back.")
-        print() 
-        print('------------------------------------------------------ | Press Ctrl+C to stop ')
-        print()
+        spacing()
 
 
 
@@ -79,21 +70,15 @@ def blockchainwl(message):
             url = bk_details(address, coin)['tx_url']
             bot.send_message(message.chat.id, "Address: " + address + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Total Sent: " + str(total_sent) + "\n" + "\n" + "Confirmed Balance: " + str(balance) + "\n" + "\n" + "Unconfirmed Balance: " + str(unconfirmed_balance) + "\n" + "\n" + "Final Balance: " + str(final_balance) + "\n" + "\n" + "Number of Transactions: " + str(tx_count) + "\n" + "\n" + "Last Tx Time: " + str(confirmed_time)[:19] + " (GMT+1)" + "\n" + "\n" + f"Last {coin} Transactions: " + url + "\n" + "\n" + "Blockchain Address: " + "https://blockchain.info/address/" + address)
             print("Address: " + address + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Total Sent: " + str(total_sent) + "\n" + "\n" + "Confirmed Balance: " + str(balance) + "\n" + "\n" + "Unconfirmed Balance: " + str(unconfirmed_balance) + "\n" + "\n" + "Final Balance: " + str(final_balance) + "\n" + "\n" + "Number of Transactions: " + str(tx_count) + "\n" + "\n" + "Last Tx Time: " + str(confirmed_time)[:19] + " (GMT+1)"  + "\n" + "\n" + f"Last {coin} Transactions: " + url + "\n" + "\n" + "Blockchain Address: " + "https://blockchain.info/address/" + address)
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
         else:
             bot.reply_to(message, "Coin not supported, please use one of the following: /bchcoins")
             print("Coin not supported, please use one of the following: /bchcoins")
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
     else:
         bot.reply_to(message, "Usage: /blockchainaddr <address> <coin>, avalable coins: /bchcoins")
         print("Usage: /blockchainaddr <address> <coin>, avalable coins: /bchcoins")
-        print()
-        print('------------------------------------------------------ | Press Ctrl+C to stop ')
-        print()
+        spacing()
 
 @bot.message_handler(commands=['blockchaintx'])
 def blockchaintx(message):
@@ -111,30 +96,22 @@ def blockchaintx(message):
             confidance = bk_transaction_details(tx_hash, coin)['confidence']
             bot.send_message(message.chat.id, "Transaction Hash: " + tx_hash + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Block Hash: " + block_hash + "\n" + "\n" + "Addresses: " + str(adresses) + "\n" + "\n" + "Total: " + str(total) + "\n" + "\n" + "Fees: " + str(fees) + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Preference: " + str(preference) + "\n" + "\n" + "Confirmations: " + str(confirmations) + "\n" + "\n" + "Confidence: " + str(confidance) + "\n" + "\n")
             print("Transaction Hash: " + tx_hash + "\n" + "\n" + "Coin: " + coin + "\n" + "\n" + "Block Hash: " + block_hash + "\n" + "\n" + "Addresses: " + str(adresses) + "\n" + "\n" + "Total: " + str(total) + "\n" + "\n" + "Fees: " + str(fees) + "\n" + "\n" + "Total Received: " + str(total_received) + "\n" + "\n" + "Preference: " + str(preference) + "\n" + "\n" + "Confirmations: " + str(confirmations) + "\n" + "\n" + "Confidence: " + str(confidance) + "\n" + "\n")
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
         else:
             bot.reply_to(message, "Coin not supported, please use one of the following: /bchcoins")
             print("Coin not supported, please use one of the following: /bchcoins")
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
     else:
         bot.reply_to(message, "Usage: /blockchaintx <tx_hash> <coin>, avalable coins: /bchcoins")
         print("Usage: /blockchaintx <tx_hash> <coin>, avalable coins: /bchcoins")
-        print()
-        print('------------------------------------------------------ | Press Ctrl+C to stop ')
-        print()
+        spacing()
 
      
 @bot.message_handler(commands=['bchcoins'])
 def bchcoins(message):
     bot.reply_to(message, "Available coins: " + str(blockchaincoins))
     print("Available coins: " + str(blockchaincoins))
-    print()
-    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-    print()
+    spacing()
 
 
 
@@ -182,16 +159,12 @@ def info(message):
         else:
             bot.reply_to(message, text=f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
             print(f'Error, {coin} was not found, if the coin has two words use "-" instead of space')
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
     else:
         bot.reply_to(message, text='Error, please use /info <coin>')
         print('Error, please use /info <coin>')
         print(f"Number of args: {len(message.text.strip().split())}")
-        print()
-        print('------------------------------------------------------ | Press Ctrl+C to stop ')
-        print()
+        spacing()
 @bot.message_handler(commands=['news'])
 def news(message):
     if len(message.text.strip().split()) == 3:
@@ -209,42 +182,31 @@ def news(message):
                     print(f"Description: {top_headlines['articles'][i]['description']}")
                     print(f"URL: {top_headlines['articles'][i]['url']}")
                     print(f"Published in: {top_headlines['articles'][i]['publishedAt'][:10]}")
-                    print()
-                    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-                    print()
+                    spacing()
                     if i == 2:
                         bot.reply_to(message, text="This function is still in alpha development, currently it only works well with top Market Cap coins.")
                         print("This function is still in alpha development, currently it only works well with top Market Cap coins.")
-                        print()
-                        print('------------------------------------------------------ | Press Ctrl+C to stop ')
-                        print()
+                        spacing()
 
             else:
                 bot.reply_to(message, text=f'Error, {coin} has no articles')
                 print(f'Error, {coin} has no articles')
-                print()
-                print('------------------------------------------------------ | Press Ctrl+C to stop ')
-                print()
+                spacing()
         else:
             bot.reply_to(message, text=f'Error, {coin} was not found or language is not supported, if the coin has two words use "-" instead of space and if the language is not supported use /language')
             print(f'Error, {coin} was not found, if the coin has two words use "-" instead of space and if the language is not supported use /language')
-            print()
-            print('------------------------------------------------------ | Press Ctrl+C to stop ')
-            print()
+            spacing()
     else:
         bot.reply_to(message, text='Error, please use /news <coin> <language>, for languages available use /languages')
         print('Error, please use /news <coin>')
         print(f"Number of args: {len(message.text.strip().split())}")
-        print()
-        print
+        spacing()
 
 @bot.message_handler(commands=['language'])
 def language(message):
     bot.reply_to(message, text='Possible language options: ar-de-en-es-fr-he-it-nl-no-pt-ru-sv-ud-zh.')
     print('Possible language options: ar-de-en-es-fr-he-it-nl-no-pt-ru-sv-ud-zh.')
-    print()
-    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-    print()
+    spacing()
 
 
 
@@ -258,7 +220,5 @@ if __name__ == '__main__':
     print('available commands: /info <coin>')
     print('Press Ctrl+C to stop')
     print('Logs:')
-    print()
-    print('------------------------------------------------------ | Press Ctrl+C to stop ')
-    print()
+    spacing()
     bot.polling()
