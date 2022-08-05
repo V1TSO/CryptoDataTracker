@@ -3,6 +3,4 @@ def spacing():
         print('------------------------------------------------------ | Press Ctrl+C to stop ')
         print()
         return
-
-
-spacing()
+        

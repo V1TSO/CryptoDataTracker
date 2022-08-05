@@ -19,7 +19,7 @@ max_days = ["1","2","3","4","5","6","7","8","9","10"]
 
 @bot.message_handler(commands=['commands'])
 def commands(message):
-    bot.send_message(message.chat.id, "Available commands:\n\n/info - Displays information about a coin, usage: /info <coin-here>\n\n/news - Displays news about a coin, usage: /news <coin-here> <language>\n\n/language - Displays all available languages, usage: /language\n\n/blockchainaddr - Displays all informaition about a bitcoin address/wallet, usage: /blochchainaddr <address> <coin-here>\n\n/blockchaintx - Displays all informaition about a bitcoin transaction, usage: /blochchaintx <transaction> <coin-here>\n\n/bchcoins - Displays all information about the networks available for the /blockchain... command, usage: /bchcoins\n\n/btcindex - Displays the Bitcoin Greed&Fear Index, usage: /btcindex <daysback (1 = Today)>")
+    bot.send_message(message.chat.id, "Available commands:\n\n/info - Displays information about a coin, usage: /info <coin-here>\n\n/news - Displays news about a coin, usage: /news <coin-here> <language>\n\n/language - Displays all available languages, usage: /language\n\n/blockchainaddr - Displays all information about an address/wallet, usage: /blochchainaddr <address> <coin-here>\n\n/blockchaintx - Displays all information about a transaction, usage: /blochchaintx <transaction> <coin-here>\n\n/bchcoins - Displays all information about the networks available for the /blockchain... command, usage: /bchcoins\n\n/btcindex - Displays the Bitcoin Greed&Fear Index, usage: /btcindex <daysback (1 = Today)>")
     print("Commands sent")  
     spacing()
 
@@ -54,7 +54,7 @@ def btcindex(message):
 
 
 @bot.message_handler(commands=['blockchainaddr'])
-def blockchainwl(message):
+def blockchainaddr(message):
     if len(message.text.strip().split()) == 3:
         address = message.text.strip(' ').split()[1]
         coin = message.text.strip(' ').split()[2]
@@ -153,7 +153,8 @@ def info(message):
                 current_circsupply = info['market_data']['circulating_supply']
                 current_circsupply = "{:,.2f}".format(current_circsupply)
                 current_maxsupply = info['market_data']['max_supply']
-                current_maxsupply = "{:,.2f}".format(current_maxsupply)
+                if current_maxsupply != None:
+                    current_maxsupply = "{:,.2f}".format(current_maxsupply)
                 bot.reply_to(message, f"Homepage: {current_homepage}\n\nBlockchain: {current_blockchain}\n\nForum: {current_forum}\n\nSubreddit: {current_subreddit}\n\nGenesis: {current_genesis}\n\nMarket cap rank: {current_mc_rank}\n\nAll time high: {current_ath}\n\nAll time high change: {current_ath_change}%\n\nAll time high date: {current_ath_date}\n\nAll time low: {current_atl}\n\nAll time low change: {current_atl_change}%\n\nAll time low date: {current_atl_date}\n\nPrice: {current_price}\n\n24h High: {current_24h}\n\n24 Low: {current_24l}\n\nMarket cap: {current_mcap}\n\nCirculating supply: {current_circsupply}\n\nTotal supply: {current_totalsupply}\n\nMax supply: {current_maxsupply}")
 
         else:
@@ -217,7 +218,6 @@ if __name__ == '__main__':
     time.sleep(0.5)
     print('waiting for commands...')
     time.sleep(0.5)
-    print('available commands: /info <coin>')
     print('Press Ctrl+C to stop')
     print('Logs:')
     spacing()

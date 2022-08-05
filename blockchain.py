@@ -24,3 +24,5 @@ def bk_transaction_details(tx_hash, coin):
 
 # output_address = bk_transaction_details('f3439e488eaa541433e0a5c40466391f33418fe2d0542468f0e69b51d5cd11dc', 'ltc')['outputs'][0]['addresses']
 # print(output_address)
+
+# print(bk_transaction_details('a466ad6589cdb2ae693c9c0f17ac2806d57f4869dd1d0f9672b84b22bb1447c6', 'btc'))
